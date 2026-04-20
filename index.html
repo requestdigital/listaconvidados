@@ -8,8 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&family=Playfair+Display:italic,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --verde-oliva: #82a37d; /* Tom extraído do seu logo */
-            --verde-claro: #f0f4f0; /* Fundo suave derivado do verde */
+            --verde-oliva: #82a37d;
+            --verde-claro: #f0f4f0;
             --branco: #ffffff;
             --texto: #4a4a4a;
             --sucesso: #28a745;
@@ -18,18 +18,18 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--verde-oliva); /* Preenche todo o fundo com o seu verde */
+            background-color: var(--verde-oliva);
             margin: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--branco); /* Texto branco sobre o verde */
+            color: var(--branco);
             overflow-x: hidden;
             position: relative;
         }
 
-        /* Marca d'água floral discreta no fundo */
+        /* Marca d'água floral discreta */
         body::before {
             content: "";
             position: absolute;
@@ -37,11 +37,10 @@
             left: -15%;
             width: 130%;
             height: 80%;
-            /* Use um SVG simples de ramos ou uma imagem sutil do seu próprio logo floral */
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path fill="%23ffffff" d="M30,10 C40,20 20,40 10,50 L5,45 C15,35 35,15 30,10 Z M70,10 C60,20 80,40 90,50 L95,45 C85,35 65,15 70,10 Z M50,60 C40,70 60,90 70,95 L65,100 C55,95 35,75 50,60 Z"/></svg>');
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.15; /* Muito sutil */
+            opacity: 0.15;
             z-index: 0;
             pointer-events: none;
         }
@@ -75,7 +74,7 @@
         .container {
             width: 88%;
             max-width: 420px;
-            background: var(--branco); /* Cartão branco para contraste do leitor */
+            background: var(--branco);
             padding: 30px;
             border-radius: 25px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.1);
@@ -100,30 +99,21 @@
             background: var(--verde-claro);
         }
 
-        /* Estilização interna da biblioteca do QR Code (Html5-QRCode) */
-        #reader__dashboard_section_csr button, 
         #reader button {
             background-color: var(--verde-oliva) !important;
             color: var(--branco) !important;
             border: none !important;
             padding: 14px 28px !important;
-            border-radius: 50px !important; /* Pílula moderna */
+            border-radius: 50px !important;
             text-transform: uppercase;
             font-weight: 600;
             font-size: 0.85rem !important;
             letter-spacing: 1.5px !important;
             cursor: pointer;
             margin: 15px 0 !important;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(130, 163, 125, 0.3) !important;
         }
 
-        #reader button:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        /* Oculta textos padrão feios da biblioteca */
         #reader__status_span, #reader__msg_status {
             display: none !important;
         }
@@ -151,17 +141,15 @@
 
         .decoracao-floral {
             width: 100%;
-            max-width: 500px; /* Aumentado para as flores aparecerem nas laterais */
-            height: 200px;
-            margin-top: -85px; /* Sobe a flor para ela "abraçar" o card branco */
-            /* SVG Botânico Elegante (Ramos de Oliveira/Eucalipto) */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Cg fill='none' stroke='white' stroke-width='1.2' opacity='0.5'%3E%3Cpath d='M400,250 C400,200 350,150 250,120 M400,250 C400,200 450,150 550,120 M400,250 C410,180 480,140 600,160 M400,250 C390,180 320,140 200,160'/%3E%3C!-- Folhas Esquerda --%3E%3Cpath fill='white' d='M260,125 Q230,100 210,130 Q240,140 260,125 Z'/%3E%3Cpath fill='white' d='M320,160 Q290,140 275,170 Q305,180 320,160 Z'/%3E%3Cpath fill='white' d='M210,165 Q180,145 165,175 Q195,185 210,165 Z'/%3E%3C!-- Folhas Direita --%3E%3Cpath fill='white' d='M540,125 Q570,100 590,130 Q560,140 540,125 Z'/%3E%3Cpath fill='white' d='M480,160 Q510,140 525,170 Q495,180 480,160 Z'/%3E%3Cpath fill='white' d='M590,165 Q620,145 635,175 Q605,185 590,165 Z'/%3E%3C/g%3E%3C/svg%3E");
+            max-width: 500px;
+            height: 150px;
+            margin-top: -85px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Cg fill='none' stroke='white' stroke-width='1.2' opacity='0.5'%3E%3Cpath d='M400,250 C400,200 350,150 250,120 M400,250 C400,200 450,150 550,120 M400,250 C410,180 480,140 600,160 M400,250 C390,180 320,140 200,160'/%3E%3Cpath fill='white' d='M260,125 Q230,100 210,130 Q240,140 260,125 Z'/%3E%3Cpath fill='white' d='M320,160 Q290,140 275,170 Q305,180 320,160 Z'/%3E%3Cpath fill='white' d='M210,165 Q180,145 165,175 Q195,185 210,165 Z'/%3E%3Cpath fill='white' d='M540,125 Q570,100 590,130 Q560,140 540,125 Z'/%3E%3Cpath fill='white' d='M480,160 Q510,140 525,170 Q495,180 480,160 Z'/%3E%3Cpath fill='white' d='M590,165 Q620,145 635,175 Q605,185 590,165 Z'/%3E%3C/g%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: center bottom;
             background-size: contain;
-            z-index: 1; /* Fica atrás do container mas na frente do fundo verde */
+            z-index: 1;
             pointer-events: none;
-            /* Suaviza as bordas inferiores */
             mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
             -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
         }
@@ -188,14 +176,6 @@
 
     <div class="container">
         <div class="instrucao">Controle de Acesso</div>
-        
-        <div id="reader"></div>
-        
-        <div id="resultado"></div>
-    </div>
-
-    <div class="container">
-        <div class="instrucao">Controle de Acesso</div>
         <div id="reader"></div>
         <div id="resultado"></div>
     </div>
@@ -207,14 +187,11 @@
     </footer>
 
     <script>
-        // SUBSTITUA PELA SUA URL DO GOOGLE APPS SCRIPT
         const apiURL = 'https://script.google.com/macros/s/AKfycbwhj_owiLxsu5t6cyFY6jsOT6edld0T_uYNa-Z1Cx_CFsbtnVRJZLo4r3OtoforF_0/exec'; 
         const resultadoDiv = document.getElementById('resultado');
 
         function onScanSuccess(decodedText) {
-            // Pausa o scanner para não ler várias vezes
             html5QrcodeScanner.clear();
-            
             resultadoDiv.style.display = 'block';
             resultadoDiv.className = 'validando';
             resultadoDiv.innerText = "Consultando lista...\n(" + decodedText + ")";
@@ -226,12 +203,9 @@
             .then(res => res.json())
             .then(data => {
                 resultadoDiv.className = data.status === 'sucesso' ? 'sucesso' : 'erro';
-                
-                // Ícones claros para feedback rápido
                 const icon = data.status === 'sucesso' ? '✅ ' : '❌ ';
                 resultadoDiv.innerText = icon + data.msg;
                 
-                // Reinicia o scanner após 4 segundos
                 setTimeout(() => {
                     resultadoDiv.style.display = 'none';
                     startScanner();
@@ -239,11 +213,12 @@
             })
             .catch(err => {
                 resultadoDiv.className = 'erro';
-                resultadoDiv.innerText = "Erro crítico de conexão.\nVerifique a internet.";
+                resultadoDiv.innerText = "Erro crítico de conexão.";
                 setTimeout(() => startScanner(), 3000);
             });
         }
 
+        // Configuração para forçar a câmera traseira automaticamente
         function startScanner() {
             html5QrcodeScanner.render(onScanSuccess);
         }
@@ -252,7 +227,11 @@
             fps: 15, 
             qrbox: {width: 250, height: 250},
             aspectRatio: 1.0,
-            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] // Foca apenas na câmera mobile
+            // PRIORIDADE: Força o uso da câmera traseira (environment)
+            videoConstraints: {
+                facingMode: { exact: "environment" }
+            },
+            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
         });
         
         startScanner();
