@@ -2,32 +2,222 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check-in QR Code</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Luz Cerimonial - Check-in</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&family=Playfair+Display:italic,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        #reader { width: 100%; max-width: 500px; border-radius: 10px; overflow: hidden; }
-        #resultado { margin-top: 20px; padding: 15px; border-radius: 5px; font-weight: bold; display: none; }
-        .sucesso { background: #d4edda; color: #155724; }
-        .erro { background: #f8d7da; color: #721c24; }
+        :root {
+            --verde-oliva: #82a37d; /* Tom extraído do seu logo */
+            --verde-claro: #f0f4f0; /* Fundo suave derivado do verde */
+            --branco: #ffffff;
+            --texto: #4a4a4a;
+            --sucesso: #28a745;
+            --erro: #dc3545;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--verde-oliva); /* Preenche todo o fundo com o seu verde */
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--branco); /* Texto branco sobre o verde */
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Marca d'água floral discreta no fundo */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 10%;
+            left: -15%;
+            width: 130%;
+            height: 80%;
+            /* Use um SVG simples de ramos ou uma imagem sutil do seu próprio logo floral */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path fill="%23ffffff" d="M30,10 C40,20 20,40 10,50 L5,45 C15,35 35,15 30,10 Z M70,10 C60,20 80,40 90,50 L95,45 C85,35 65,15 70,10 Z M50,60 C40,70 60,90 70,95 L65,100 C55,95 35,75 50,60 Z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15; /* Muito sutil */
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        header {
+            width: 100%;
+            padding: 50px 0 30px 0;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            color: var(--branco);
+            font-size: 3.5rem;
+            margin: 0;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .sub-logo {
+            color: var(--branco);
+            letter-spacing: 6px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-top: -8px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 88%;
+            max-width: 420px;
+            background: var(--branco); /* Cartão branco para contraste do leitor */
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 2;
+            margin-bottom: 30px;
+        }
+
+        .instrucao {
+            color: var(--verde-oliva);
+            font-weight: 500;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        #reader {
+            width: 100% !important;
+            border: 1.5px solid #eaeaea !important;
+            border-radius: 15px;
+            overflow: hidden;
+            background: var(--verde-claro);
+        }
+
+        /* Estilização interna da biblioteca do QR Code (Html5-QRCode) */
+        #reader__dashboard_section_csr button, 
+        #reader button {
+            background-color: var(--verde-oliva) !important;
+            color: var(--branco) !important;
+            border: none !important;
+            padding: 14px 28px !important;
+            border-radius: 50px !important; /* Pílula moderna */
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 0.85rem !important;
+            letter-spacing: 1.5px !important;
+            cursor: pointer;
+            margin: 15px 0 !important;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(130, 163, 125, 0.3) !important;
+        }
+
+        #reader button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Oculta textos padrão feios da biblioteca */
+        #reader__status_span, #reader__msg_status {
+            display: none !important;
+        }
+
+        #resultado {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: none;
+            white-space: pre-line;
+            font-size: 1rem;
+            line-height: 1.5;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .sucesso { background: #e8f5e9; color: var(--sucesso); border: 2px solid var(--sucesso); }
+        .erro { background: #ffebee; color: var(--erro); border: 2px solid var(--erro); }
+        .validando { background: #fff8e1; color: #e6a700; border: 2px solid #ffd54f; }
+
+        .decoracao-floral {
+            width: 100%;
+            max-width: 500px; /* Aumentado para as flores aparecerem nas laterais */
+            height: 200px;
+            margin-top: -85px; /* Sobe a flor para ela "abraçar" o card branco */
+            /* SVG Botânico Elegante (Ramos de Oliveira/Eucalipto) */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Cg fill='none' stroke='white' stroke-width='1.2' opacity='0.5'%3E%3Cpath d='M400,250 C400,200 350,150 250,120 M400,250 C400,200 450,150 550,120 M400,250 C410,180 480,140 600,160 M400,250 C390,180 320,140 200,160'/%3E%3C!-- Folhas Esquerda --%3E%3Cpath fill='white' d='M260,125 Q230,100 210,130 Q240,140 260,125 Z'/%3E%3Cpath fill='white' d='M320,160 Q290,140 275,170 Q305,180 320,160 Z'/%3E%3Cpath fill='white' d='M210,165 Q180,145 165,175 Q195,185 210,165 Z'/%3E%3C!-- Folhas Direita --%3E%3Cpath fill='white' d='M540,125 Q570,100 590,130 Q560,140 540,125 Z'/%3E%3Cpath fill='white' d='M480,160 Q510,140 525,170 Q495,180 480,160 Z'/%3E%3Cpath fill='white' d='M590,165 Q620,145 635,175 Q605,185 590,165 Z'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center bottom;
+            background-size: contain;
+            z-index: 1; /* Fica atrás do container mas na frente do fundo verde */
+            pointer-events: none;
+            /* Suaviza as bordas inferiores */
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 25px;
+            font-size: 0.8rem;
+            color: var(--branco);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 300;
+            opacity: 0.8;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
-    <h2>Validação de Convidados</h2>
-    <div id="reader"></div>
-    <div id="resultado"></div>
+
+    <header>
+        <div class="logo-text">Luz</div>
+        <div class="sub-logo">Cerimonial</div>
+    </header>
+
+    <div class="container">
+        <div class="instrucao">Controle de Acesso</div>
+        
+        <div id="reader"></div>
+        
+        <div id="resultado"></div>
+    </div>
+
+    <div class="container">
+        <div class="instrucao">Controle de Acesso</div>
+        <div id="reader"></div>
+        <div id="resultado"></div>
+    </div>
+
+    <div class="decoracao-floral"></div>
+
+    <footer>
+        — @luz_cerimonial —
+    </footer>
 
     <script>
-        const apiURL = 'https://script.google.com/macros/s/AKfycbwhj_owiLxsu5t6cyFY6jsOT6edld0T_uYNa-Z1Cx_CFsbtnVRJZLo4r3OtoforF_0/exec';
+        // SUBSTITUA PELA SUA URL DO GOOGLE APPS SCRIPT
+        const apiURL = 'https://script.google.com/macros/s/AKfycbwhj_owiLxsu5t6cyFY6jsOT6edld0T_uYNa-Z1Cx_CFsbtnVRJZLo4r3OtoforF_0/exec'; 
         const resultadoDiv = document.getElementById('resultado');
 
         function onScanSuccess(decodedText) {
-            // Pausa o scanner para não ler várias vezes o mesmo código
+            // Pausa o scanner para não ler várias vezes
             html5QrcodeScanner.clear();
             
             resultadoDiv.style.display = 'block';
-            resultadoDiv.innerText = "Validando: " + decodedText + "...";
+            resultadoDiv.className = 'validando';
+            resultadoDiv.innerText = "Consultando lista...\n(" + decodedText + ")";
 
             fetch(apiURL, {
                 method: 'POST',
@@ -36,22 +226,36 @@
             .then(res => res.json())
             .then(data => {
                 resultadoDiv.className = data.status === 'sucesso' ? 'sucesso' : 'erro';
-                resultadoDiv.innerText = data.msg + " (" + decodedText + ")";
                 
-                // Reinicia o scanner após 3 segundos para a próxima leitura
+                // Ícones claros para feedback rápido
+                const icon = data.status === 'sucesso' ? '✅ ' : '❌ ';
+                resultadoDiv.innerText = icon + data.msg;
+                
+                // Reinicia o scanner após 4 segundos
                 setTimeout(() => {
                     resultadoDiv.style.display = 'none';
-                    html5QrcodeScanner.render(onScanSuccess);
-                }, 3000);
+                    startScanner();
+                }, 4000);
             })
             .catch(err => {
-                alert("Erro ao conectar na planilha. Verifique a URL da API.");
-                html5QrcodeScanner.render(onScanSuccess);
+                resultadoDiv.className = 'erro';
+                resultadoDiv.innerText = "Erro crítico de conexão.\nVerifique a internet.";
+                setTimeout(() => startScanner(), 3000);
             });
         }
 
-        let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess);
+        function startScanner() {
+            html5QrcodeScanner.render(onScanSuccess);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+            fps: 15, 
+            qrbox: {width: 250, height: 250},
+            aspectRatio: 1.0,
+            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] // Foca apenas na câmera mobile
+        });
+        
+        startScanner();
     </script>
 </body>
 </html>
