@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in QR Code</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        #reader { width: 100%; max-width: 500px; border-radius: 10px; overflow: hidden; }
+        #resultado { margin-top: 20px; padding: 15px; border-radius: 5px; font-weight: bold; display: none; }
+        .sucesso { background: #d4edda; color: #155724; }
+        .erro { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h2>Validação de Convidados</h2>
+    <div id="reader"></div>
+    <div id="resultado"></div>
+
+    <script>
+        const apiURL = 'COLE_AQUI_A_URL_DA_SUA_IMPLANTACAO';
+        const resultadoDiv = document.getElementById('resultado');
+
+        function onScanSuccess(decodedText) {
+            // Pausa o scanner para não ler várias vezes o mesmo código
+            html5QrcodeScanner.clear();
+            
+            resultadoDiv.style.display = 'block';
+            resultadoDiv.innerText = "Validando: " + decodedText + "...";
+
+            fetch(apiURL, {
+                method: 'POST',
+                body: JSON.stringify({ nome: decodedText })
+            })
+            .then(res => res.json())
+            .then(data => {
+                resultadoDiv.className = data.status === 'sucesso' ? 'sucesso' : 'erro';
+                resultadoDiv.innerText = data.msg + " (" + decodedText + ")";
+                
+                // Reinicia o scanner após 3 segundos para a próxima leitura
+                setTimeout(() => {
+                    resultadoDiv.style.display = 'none';
+                    html5QrcodeScanner.render(onScanSuccess);
+                }, 3000);
+            })
+            .catch(err => {
+                alert("Erro ao conectar na planilha. Verifique a URL da API.");
+                html5QrcodeScanner.render(onScanSuccess);
+            });
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner.render(onScanSuccess);
+    </script>
+</body>
+</html>
