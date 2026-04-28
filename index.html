@@ -188,14 +188,6 @@
 
     <div class="container">
         <div class="instrucao">Controle de Acesso</div>
-        
-        <div id="reader"></div>
-        
-        <div id="resultado"></div>
-    </div>
-
-    <div class="container">
-        <div class="instrucao">Controle de Acesso</div>
         <div id="reader"></div>
         <div id="resultado"></div>
     </div>
@@ -213,7 +205,9 @@
 
         function onScanSuccess(decodedText) {
             // Pausa o scanner para não ler várias vezes
-            html5QrcodeScanner.clear();
+            html5QrCode.stop().then(() => {
+                console.log("Scanner parado");
+            });
             
             resultadoDiv.style.display = 'block';
             resultadoDiv.className = 'validando';
@@ -248,12 +242,24 @@
             html5QrcodeScanner.render(onScanSuccess);
         }
 
-        let html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-            fps: 15, 
-            qrbox: {width: 250, height: 250},
-            aspectRatio: 1.0,
-            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] // Foca apenas na câmera mobile
-        });
+        let html5QrCode;
+
+        function startScanner() {
+            html5QrCode = new Html5Qrcode("reader");
+
+            const config = {
+                fps: 15,
+                qrbox: { width: 250, height: 250 }
+            };
+
+            html5QrCode.start(
+                { facingMode: "environment" },
+                config,
+                onScanSuccess
+            ).catch(err => {
+                console.error("Erro ao iniciar câmera:", err);
+            });
+        }
         
         startScanner();
     </script>
